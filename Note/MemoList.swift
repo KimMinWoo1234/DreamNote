@@ -419,29 +419,29 @@ extension MemoList: View {
                 NavigationLink(destination: Search()) {
                     topBarIcon(iconName: "magnifyingglass")
                 }
-
+                
                 Button(action: {
                     self.isEditing.toggle();order_reset();selection = Set<TreeNode>();showPopUp = false
                 }) {
                     topBarIcon(iconName: isEditing ? "ellipsis.circle.fill" : "ellipsis.circle")
                 }
             }
-
+            
             ToolbarItemGroup(placement: .bottomBar) {
-
+                
                 Button(action: {isEditing ? deleteNumbers() : (self.tag = 1)}) {
                     trashicon(colorRed: isEditing)
                 }
-
+                
                 Spacer()
-
+                
                 if(self.isEditing == true){
                     Text("\(selection.count)개 선택")
                         .frame(width: 100)
                 }
-
+                
                 Spacer()
-
+                
                 //메모 작성
                 NavigationLink(destination: memotext(root: root)) {
                     Image(systemName: "doc.badge.plus")
