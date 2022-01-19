@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Folder" representedClassName=".Folder" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" usesScalarValueType="YES"/>
+        <attribute name="pin" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="star" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TreeNode" inverseName="parent" inverseEntity="TreeNode"/>
+    </entity>
+    <entity name="TreeNode" representedClassName=".TreeNode" syncable="YES">
+        <attribute name="allOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="String"/>
+        <attribute name="editingDay" optional="YES" attributeType="String"/>
+        <attribute name="lock" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="memo" optional="YES" attributeType="String"/>
+        <attribute name="memoName" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" usesScalarValueType="YES"/>
+        <attribute name="pin" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="star" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="trash" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Folder" inverseName="children" inverseEntity="Folder"/>
+    </entity>
+    <elements>
+        <element name="TreeNode" positionX="-1153.958312988281" positionY="9751.799407958984" width="119.2734375" height="208"/>
+        <element name="Folder" positionX="-1450.609436035156" positionY="9804.423187255859" width="111.8011474609375" height="118"/>
+    </elements>
+</model>
