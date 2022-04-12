@@ -7,7 +7,7 @@
 
 import CoreData
 
-class TreeNode: NSManagedObject {
+class File: NSManagedObject {
     @NSManaged var children: NSSet?
     @NSManaged var parent: Folder?
     
@@ -21,7 +21,7 @@ class TreeNode: NSManagedObject {
     @NSManaged var memo: String
     
     //파일 이름
-    @NSManaged var memoName: String
+    @NSManaged var name: String
     
     //생성일
     @NSManaged var creationDate: String
@@ -32,23 +32,31 @@ class TreeNode: NSManagedObject {
     //고정
     @NSManaged var pin: Bool
     
-    //휴지통
-    @NSManaged var trash: Bool
-    
     //즐겨찾기
     @NSManaged var star: Bool
     
     //파일잠금
     @NSManaged var lock: Bool
+    
+    //휴지통
+    @NSManaged var trash: Bool
 }
 
-extension TreeNode {
-    static func getNodes(root: Folder? ) -> NSFetchRequest<TreeNode> {
-        let request = TreeNode.fetchRequest() as! NSFetchRequest<TreeNode>
-
-            request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
-            request.predicate = NSPredicate(format: "parent = %@", root ?? NSNull())
+extension File {
+    static func getNodes(root: Folder? ) -> NSFetchRequest<File> {
+        let request = File.fetchRequest() as! NSFetchRequest<File>
         
+        if root == nil {
+            
+            request.sortDescriptors = [NSSortDescriptor(key: "allOrder", ascending: true)]
+            request.predicate = NSPredicate(format: "trash = %@", NSNumber(value: false))
+            
+        } else {
+            
+            request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+            request.predicate = NSPredicate(format: "parent = %@ && trash = %@", root ?? NSNull(), NSNumber(value: false))
+            
+        }
         return request
     }
 }
@@ -67,13 +75,17 @@ class Folder: NSManagedObject {
     
     //즐겨찾기
     @NSManaged var star: Bool
+    
+    //파일 갯수
+    @NSManaged var childrenCount: Int
 }
 
 extension Folder {
     static func getNodes(root: Folder? ) -> NSFetchRequest<Folder> {
         let request = Folder.fetchRequest() as! NSFetchRequest<Folder>
-
-            request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+        
         
         return request
     }

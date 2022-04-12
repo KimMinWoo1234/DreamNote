@@ -10,13 +10,12 @@ import CoreData
 
 struct index {
     
-    @Environment(\.managedObjectContext) var managedObjectContext: NSManagedObjectContext
+    @FetchRequest(
+        entity: Folder.entity(),
+        sortDescriptors: [NSSortDescriptor(key: "order", ascending: true)]
+    )var fetchedResults: FetchedResults<Folder>
     
-    var root: Folder?
-    var fetchRequest: FetchRequest<Folder>
-    var fetchedResults: FetchedResults<Folder> {
-        fetchRequest.wrappedValue
-    }
+    @Environment(\.managedObjectContext) var managedObjectContext: NSManagedObjectContext
     
     //편집 모드 여부
     @State var isEditing = false
@@ -24,31 +23,6 @@ struct index {
     @State var selection = Set<Folder>()
     //플로팅 버튼
     @State var showPopUp = false
-    
-    //초기화
-    init(root: Folder? = nil) {
-        let appearance = UINavigationBarAppearance()
-        //상단 바 불투명
-        appearance.configureWithOpaqueBackground()
-        //타이틀 색상 및 크기
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.systemFont(ofSize: 25)]
-        //배경 색상
-        appearance.backgroundColor = UIColor(named: "AccentColor")
-        
-        let proxy = UINavigationBar.appearance()
-        //뒤로가기 화살표 색상
-        proxy.tintColor = .white
-        //타이틀과 Safe area 합치기
-        proxy.standardAppearance = appearance
-        //스크롤 했을때 설정 유지
-        proxy.scrollEdgeAppearance = appearance
-        //스크롤 했을때 하단 바 색상
-        UIToolbar.appearance().barTintColor = UIColor(named: "Color")
-        
-        //폴더 클릭시 경로 저장
-        self.root = root
-        fetchRequest = FetchRequest(fetchRequest: Folder.getNodes(root: root))
-    }
     
     //이름변경 alert속성
     private func Changealert(listItem: Folder?) {
@@ -72,11 +46,12 @@ struct index {
                 saveAction.isEnabled = textField.text!.count > 0
             }
         })
+        
         showAlert(alert: alert)
     }
     
     //폴더 새로만들기 alert속성
-    func Addalert() {
+    func addAlert() {
         
         let alert = UIAlertController(title: "폴더 새로만들기", message: "폴더의 이름을 입력해주세요.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
@@ -94,7 +69,7 @@ struct index {
         alert.addTextField(configurationHandler: { (textField) in
             saveAction.isEnabled = false
             textField.placeholder = "폴더 이름"
-            NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue:            OperationQueue.main) { (notification) in
+            NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: OperationQueue.main) { (notification) in
                 //null 체크
                 saveAction.isEnabled = textField.text!.count > 0
             }
@@ -102,13 +77,26 @@ struct index {
         showAlert(alert: alert)
     }
     
-    //드래그 삭제
-    func deleteItem(indexSet: IndexSet) {
-        withAnimation{
-            indexSet.map {fetchedResults[$0]}.forEach(managedObjectContext.delete)
-            order_reset()
-            saveItems()
-        }
+    //삭제 alert속성
+    func deleteItem() {
+        
+        let alert = UIAlertController(title: "폴더 삭제", message: "하위 파일까지 모두 영구 삭제되며\n 되돌릴수 없습니다.\n 정말 삭제하시겠습니까?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { (action) -> Void in selection = Set<Folder>()}))
+        let saveAction = UIAlertAction(title:"확인", style: .destructive, handler: { (action) -> Void in
+            withAnimation {
+                
+                for node in selection {
+                    managedObjectContext.delete(node)
+                }
+
+                selection = Set<Folder>()
+                order_reset()
+                saveItems()
+            }
+        })
+        alert.addAction(saveAction)
+        
+        showAlert(alert: alert)
     }
     
     //고정
@@ -161,16 +149,6 @@ struct index {
         } catch {
             print(error)
         }
-    }
-    
-    //선택 삭제
-    private func deleteNumbers() {
-        
-        for node in selection {
-            managedObjectContext.delete(node)
-        }
-        
-        saveItems()
     }
     
     //선택 고정
@@ -230,122 +208,132 @@ extension index: View {
     
     var body: some View {
         ZStack {
+            
             List(selection: $selection) {
-                
+
                 Section(header: Text("폴더에 상관없이 모든 파일을 볼 수 있습니다.")
                         , content: {
-                    
+
                     Text("모든 파일")
                         .bold()
                         .foregroundColor(.primary)
                         .background(NavigationLink(destination: MemoList()){})
                 })
-                
+
                 Section(header: Text("폴더: \(fetchedResults.count)개"), content: {
                     
-                    //모두선택 버튼
-                    if(self.isEditing == true){
-                        Button(action: {AllChoose()}) {
-                            HStack {
+                    if isEditing {
+                        //모두선택 버튼
+                        Button(action: {}) {
+                            Button(action: {AllChoose()}) {
                                 Image(systemName: fetchedResults.count == selection.count &&
                                       fetchedResults.count != 0 ? "checkmark.circle.fill" : "circle")
                                     .resizable()
                                     .frame(width: 20, height: 20)
                                     .foregroundColor(fetchedResults.count == selection.count && fetchedResults.count != 0 ? .green : .gray)
                                     .font(.system(size: 20, weight: .bold, design: .default))
-                                    .onTapGesture {AllChoose()}
-                                Button(action: {AllChoose()}) {
-                                    Text("모두 선택")
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                }
+                                
+                                Text("모두 선택")
+                                    .foregroundColor(.primary)
+                                Spacer()
                             }
                         }
                     }
-                    
+
                     //폴더
                     ForEach(fetchedResults, id: \.self) { node in
                         HStack {
                             Image(systemName: node.star ? "star.fill" : "folder")
                                 .foregroundColor(node.star ? .yellow : nil)
-                            
-                            Text("\(node.name)")// \(node.parent?.folderName ?? node.memoName)")
+
+                            Text("\(node.name)")
                                 .environment(\.managedObjectContext, self.managedObjectContext)
                                 .foregroundColor(.primary)
+                                .background(self.isEditing ? nil : NavigationLink(destination: MemoList(root: node)){})
                                 .contextMenu /*@START_MENU_TOKEN@*/{
                                     
                                     Button{Changealert(listItem: node)}
-                                label:{Label("폴더 이름변경", systemImage: "folder.fill")}
+                                    label:{Label("폴더 이름변경", systemImage: "folder.fill")}
                                     
                                     Button{pin(listItem: node)}
-                                label:{Label("폴더 고정", systemImage: "pin.fill")}
+                                    label:{Label("폴더 고정", systemImage: "pin.fill")}
                                     
                                     Button{folderStar(listItem: node)}
-                                label:{Label(node.star ? "즐겨찾기 취소" : "즐겨찾기 추가",
-                                             systemImage: node.star ? "star.slash.fill" : "star.fill")}
+                                    label:{Label(node.star ? "즐겨찾기 취소" : "즐겨찾기 추가",
+                                                 systemImage: node.star ? "star.slash.fill" : "star.fill")}
                                     
                                 }/*@END_MENU_TOKEN@*/
-                            self.isEditing ? nil : NavigationLink(destination: MemoList(root: node)) {}.frame(width: 0)
                             
+                                .swipeActions(edge: .leading) {
+                                    Button(action: {pin(listItem: node)}) {
+                                        Image(systemName: node.pin ? "pin.slash.fill" : "pin.fill")
+                                    }
+                                }.tint(.blue)
+                            
+                                .swipeActions(edge: .trailing) {
+                                    Button(action: {selection.insert(node); deleteItem()}) {
+                                        Image(systemName: "trash.fill")
+                                    }.tint(.red)
+                                    Button(action: {folderStar(listItem: node)}) {
+                                        Image(systemName: node.star ? "star.slash.fill" : "star.fill")
+                                    }.tint(.yellow)
+                                }
+
                             Spacer()
-                            
-                            Text("\(node.children!.count)")
+
+                            Text("\(node.childrenCount)")
                                 .foregroundColor(.gray)
-                            
+
                             node.pin ? Image(systemName: "pin.fill") : nil
                         }
                     }
                     .onMove(perform: moveItem)
-                    .onDelete(perform: deleteItem)
                 })
             }
             .environment(\.editMode, .constant(self.isEditing ? EditMode.active : EditMode.inactive))
             .animation(Animation.spring(), value: self.isEditing)
             
             //플로팅 버튼
-            if isEditing {
+            ZStack {
+                if showPopUp {
+                    HStack(spacing: 20) {
+                        
+                        Button(action: {pinNumbers()}) {
+                            floting(iconName: "pin.circle.fill")
+                        }
+                        Button(action: {starNumbers()}) {
+                            floting(iconName: "star.circle.fill")
+                        }
+                    }
+                    .transition(.scale)
+                    .offset(y: -50)
+                }
                 ZStack {
-                    if showPopUp {
-                        HStack(spacing: 20) {
-                            
-                            Button(action: {pinNumbers()}) {
-                                floting(iconName: "pin.circle.fill")
-                            }
-                            Button(action: {starNumbers()}) {
-                                floting(iconName: "star.circle.fill")
-                            }
-                        }
-                        .transition(.scale)
-                        .offset(y: -50)
+                    Circle()
+                        .foregroundColor(.white)
+                        .frame(width: 45.0, height: 45.0)
+                        .shadow(radius: 4)
+                    Image(systemName: "plus.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40.0, height: 40.0)
+                        .foregroundColor(Color("AccentColor"))
+                        .rotationEffect(Angle(degrees: showPopUp ? 135 : 0))
+                }
+                .onTapGesture {
+                    withAnimation {
+                        showPopUp.toggle()
                     }
-                    ZStack {
-                        Circle()
-                            .foregroundColor(.white)
-                            .frame(width: 45.0, height: 45.0)
-                            .shadow(radius: 4)
-                        Image(systemName: "plus.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 40.0, height: 40.0)
-                            .foregroundColor(Color("AccentColor"))
-                            .rotationEffect(Angle(degrees: showPopUp ? 135 : 0))
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            showPopUp.toggle()
-                        }
-                    }
-                }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }
+                }
+            }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+             .transition(AnyTransition.opacity.animation(.easeInOut))
+             .opacity(isEditing ? 1.0 : 0.0)
+             .animation(Animation.spring(), value: self.isEditing)
         }
         
         .navigationBarTitle("DreamNote", displayMode: .inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                //검색 버튼
-                NavigationLink(destination: Search()) {
-                    topBarIcon(iconName: "magnifyingglass")
-                }
                 //편집 버튼
                 Button(action: {
                     isEditing.toggle();selection = Set<Folder>();showPopUp = false
@@ -358,7 +346,7 @@ extension index: View {
                 
                 //휴지통
                 if self.isEditing == true {
-                    Button(action: {deleteNumbers()}) {
+                    Button(action: {deleteItem()}) {
                         trashicon(colorRed: true)
                     }
                 }else {
@@ -369,14 +357,14 @@ extension index: View {
                 
                 Spacer()
                 
-                if(self.isEditing == true) {
-                    Text("\(selection.count)개 선택")
-                        .frame(width: 100, alignment: .center)
-                }
+                Text("\(selection.count)개 선택")
+                    .frame(width: 100, alignment: .center)
+                    .opacity(isEditing ? 1.0 : 0.0)
+                    .animation(Animation.spring(), value: self.isEditing)
                 
                 Spacer()
                 
-                Button(action: {Addalert()}) {
+                Button(action: {addAlert()}) {
                     Image(systemName: "folder.badge.plus")
                         .resizable()
                         .frame(width: 40.0, height: 30.0)

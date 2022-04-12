@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct memoview: View {
-    var root: TreeNode?
+    var root: File?
     @State var Title:String
     @State var memo:String
     
@@ -58,7 +58,7 @@ struct memoview: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let date = formatter.string(from: Date())
-        self.root!.memoName = Title == "" ? "제목없는 파일" : Title
+        self.root!.name = Title == "" ? "제목없는 파일" : Title
         self.root!.memo = memo
         self.root!.editingDay = date
                 

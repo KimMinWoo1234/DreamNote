@@ -10,9 +10,9 @@ import SwiftUI
 struct memotext: View {
    
    @FetchRequest(
-       entity: TreeNode.entity(),
+       entity: File.entity(),
        sortDescriptors: [NSSortDescriptor(key: "allOrder", ascending: true)]
-   )var listItems: FetchedResults<TreeNode>
+   )var listItems: FetchedResults<File>
    
    var root: Folder?
    @State var Title:String = ""
@@ -27,7 +27,8 @@ struct memotext: View {
       
       TextEditor(text: $memo)
          .padding(1)
-         .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)})
+         .simultaneousGesture(DragGesture(minimumDistance: 100)
+         .onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)})
          
          .toolbar {
             ToolbarItem(placement: .principal) {
@@ -56,14 +57,16 @@ struct memotext: View {
       formatter.dateFormat = "yyyy-MM-dd"
       let date = formatter.string(from: Date())
          
-      let node = TreeNode(context: managedObjectContext)
+      let node = File(context: managedObjectContext)
       
-      node.memoName = Title == "" ? "제목없는 파일" : Title
+      node.name = Title == "" ? "제목없는 파일" : Title
       node.memo = memo
       node.order = root?.children!.count ?? 0
       node.allOrder = (listItems.last?.allOrder ?? -1) + 1
       node.creationDate = date
       node.editingDay = date
+      node.trash = false
+      root?.childrenCount = (root?.childrenCount ?? 0) + 1
          
       node.parent = root
       saveItems()

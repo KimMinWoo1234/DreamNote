@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		F10366F0256799DC00D1C858 /* memoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10366EF256799DC00D1C858 /* memoview.swift */; };
 		F112CF1C272595DC00093B8E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F112CF1B272595DC00093B8E /* AppDelegate.swift */; };
-		F1616546275A00F900FA16BC /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F1616544275A00F900FA16BC /* Note.xcdatamodeld */; };
+		F13A72DC280016820095A5B9 /* moveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13A72DB280016820095A5B9 /* moveView.swift */; };
 		F16D29922579F2A6006E4031 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16D29912579F2A6006E4031 /* Search.swift */; };
 		F1726356255EA24E00B70158 /* Listltem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1726355255EA24E00B70158 /* Listltem.swift */; };
 		F18F40DD2553C0D700769BC7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F40DC2553C0D700769BC7 /* SceneDelegate.swift */; };
@@ -20,6 +20,7 @@
 		F1B0302A2716AD8100973420 /* MemoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B030292716AD8100973420 /* MemoList.swift */; };
 		F1C6F62C2669B1C10053A719 /* Trash.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C6F62B2669B1C10053A719 /* Trash.swift */; };
 		F1C98D8A256BA9C300A4FBFB /* index.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C98D89256BA9C300A4FBFB /* index.swift */; };
+		F1CDA8F1279FE83F004A9507 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA8EF279FE83F004A9507 /* Note.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,7 +39,7 @@
 /* Begin PBXFileReference section */
 		F10366EF256799DC00D1C858 /* memoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = memoview.swift; sourceTree = "<group>"; };
 		F112CF1B272595DC00093B8E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F1616545275A00F900FA16BC /* Note.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Note.xcdatamodel; sourceTree = "<group>"; };
+		F13A72DB280016820095A5B9 /* moveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moveView.swift; sourceTree = "<group>"; };
 		F16D29912579F2A6006E4031 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		F1726355255EA24E00B70158 /* Listltem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Listltem.swift; sourceTree = "<group>"; };
 		F18F40D72553C0D700769BC7 /* DreamNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DreamNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +52,8 @@
 		F1B030292716AD8100973420 /* MemoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoList.swift; sourceTree = "<group>"; };
 		F1C6F62B2669B1C10053A719 /* Trash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trash.swift; sourceTree = "<group>"; };
 		F1C98D89256BA9C300A4FBFB /* index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = index.swift; sourceTree = "<group>"; usesTabs = 0; };
+		F1CDA8EE279FE5E9004A9507 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F1CDA8F0279FE83F004A9507 /* Note.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Note.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				F18F40EB2553C0D800769BC7 /* Info.plist */,
-				F1616544275A00F900FA16BC /* Note.xcdatamodeld */,
+				F1CDA8EF279FE83F004A9507 /* Note.xcdatamodeld */,
 				F18F40E32553C0D800769BC7 /* Assets.xcassets */,
 				F18F40E82553C0D800769BC7 /* LaunchScreen.storyboard */,
 				F112CF1B272595DC00093B8E /* AppDelegate.swift */,
@@ -98,6 +101,7 @@
 				F10366EF256799DC00D1C858 /* memoview.swift */,
 				F16D29912579F2A6006E4031 /* Search.swift */,
 				F1C6F62B2669B1C10053A719 /* Trash.swift */,
+				F13A72DB280016820095A5B9 /* moveView.swift */,
 			);
 			path = Note;
 			sourceTree = "<group>";
@@ -145,6 +149,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = F18F40CE2553C0D700769BC7;
 			productRefGroup = F18F40D82553C0D700769BC7 /* Products */;
@@ -175,15 +180,16 @@
 			files = (
 				F1726356255EA24E00B70158 /* Listltem.swift in Sources */,
 				F1C6F62C2669B1C10053A719 /* Trash.swift in Sources */,
+				F1CDA8F1279FE83F004A9507 /* Note.xcdatamodeld in Sources */,
 				F10366F0256799DC00D1C858 /* memoview.swift in Sources */,
 				F18F40DD2553C0D700769BC7 /* SceneDelegate.swift in Sources */,
 				F18F40DF2553C0D700769BC7 /* ContentView.swift in Sources */,
 				F112CF1C272595DC00093B8E /* AppDelegate.swift in Sources */,
-				F1616546275A00F900FA16BC /* Note.xcdatamodeld in Sources */,
 				F18F41202553C1DE00769BC7 /* memotext.swift in Sources */,
 				F1B0302A2716AD8100973420 /* MemoList.swift in Sources */,
 				F16D29922579F2A6006E4031 /* Search.swift in Sources */,
 				F1C98D8A256BA9C300A4FBFB /* index.swift in Sources */,
+				F13A72DC280016820095A5B9 /* moveView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +200,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F18F40E92553C0D800769BC7 /* Base */,
+				F1CDA8EE279FE5E9004A9507 /* ko */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -255,7 +262,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -315,7 +322,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -343,7 +350,7 @@
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Note/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -375,7 +382,7 @@
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Note/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -415,12 +422,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		F1616544275A00F900FA16BC /* Note.xcdatamodeld */ = {
+		F1CDA8EF279FE83F004A9507 /* Note.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				F1616545275A00F900FA16BC /* Note.xcdatamodel */,
+				F1CDA8F0279FE83F004A9507 /* Note.xcdatamodel */,
 			);
-			currentVersion = F1616545275A00F900FA16BC /* Note.xcdatamodel */;
+			currentVersion = F1CDA8F0279FE83F004A9507 /* Note.xcdatamodel */;
 			path = Note.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

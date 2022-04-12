@@ -3,8 +3,29 @@ import CoreData
 
 struct ContentView: View {
     
+    //초기화
+    init() {
+        let appearance = UINavigationBarAppearance()
+        //상단 바 불투명
+        appearance.configureWithOpaqueBackground()
+        //타이틀 색상 및 크기
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.systemFont(ofSize: 25)]
+        //배경 색상
+        appearance.backgroundColor = UIColor(named: "AccentColor")
+        
+        let proxy = UINavigationBar.appearance()
+        //뒤로가기 화살표 색상
+        proxy.tintColor = .white
+        //타이틀과 Safe area 합치기
+        proxy.standardAppearance = appearance
+        //스크롤 했을때 설정 유지
+        proxy.scrollEdgeAppearance = appearance
+        //스크롤 했을때 하단 바 색상
+        UIToolbar.appearance().barTintColor = UIColor(named: "Color")
+    }
+    
     var body: some View {
-        NavigationView{
+        NavigationView {
             index()
         }.navigationViewStyle(StackNavigationViewStyle())
         
@@ -58,8 +79,12 @@ extension UINavigationController {
 }
 
 //즐겨찾기 추가/삭제
-func star(listItem: TreeNode?) {
-    listItem?.star.toggle()
+func star(selection: Set<File>) {
+    
+    for node in selection {
+        node.star.toggle()
+    }
+    
 }
 
 //즐겨찾기 추가/삭제
@@ -113,24 +138,3 @@ struct floting: View {
         }
     }
 }
-
-//struct nv: View {
-//    @State var tag:Int? = nil
-//    
-//    let listItem: TreeNode?
-//    
-//    var body: some View {
-//        //휴지통
-//        NavigationLink(
-//            destination: Trash(),
-//            tag: 1,
-//            selection: self.$tag){}
-//    
-//        //메모 수정
-//        NavigationLink(
-//            destination: memoview(root: listItem),
-//            tag: 333,
-//            selection: self.$tag){}
-//    }
-//}
-
